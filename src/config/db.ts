@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import envConfig from ".";
 
-const pool = new Pool({
+export const pool = new Pool({
   connectionString: envConfig.connectionString,
 });
 

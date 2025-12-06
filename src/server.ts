@@ -1,16 +1,8 @@
-import express, { Application, json, Request, Response } from "express";
-import initializeDB from "./config/db";
+import { Request, Response } from "express";
 import envConfig from "./config";
+import app from "./app";
 
-//* Create Express application
-const app: Application = express();
 const port = envConfig.port || 5000;
-
-//* Middleware to parse JSON requests
-app.use(json());
-
-//* Initialize Database
-initializeDB();
 
 //* Default Routes
 app.get("/", (req: Request, res: Response) => {
@@ -42,5 +34,3 @@ app.use((req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`Server is Running on port ${port}`);
 });
-
-export default app;
