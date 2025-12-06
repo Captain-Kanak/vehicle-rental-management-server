@@ -28,7 +28,8 @@ const initializeDB = async () => {
           vehicle_name VARCHAR(100) NOT NULL,
           type VARCHAR(100) NOT NULL,
           registration_number VARCHAR(200) NOT NULL UNIQUE,
-          daily_rent_price INTEGER NOT NULL POSITIVE,
+          daily_rent_price INTEGER NOT NULL
+            CHECK(daily_rent_price > 0),
           availability_status VARCHAR(20) DEFAULT 'available'
             CHECK(availability_status IN ('available', 'booked'))
         );
@@ -43,7 +44,8 @@ const initializeDB = async () => {
           vehicle_id INT NOT NULL REFERENCES vehicles(id) ON DELETE CASCADE,
           rent_start_date DATE NOT NULL,
           rent_end_date DATE NOT NULL,
-          total_price INTEGER NOT NULL POSITIVE,
+          total_price INTEGER NOT NULL 
+            CHECK(total_price > 0),
           status VARCHAR(20) DEFAULT 'active'
             CHECK(status IN ('active', 'cancelled', 'returned')),
 
