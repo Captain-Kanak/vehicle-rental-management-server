@@ -19,17 +19,6 @@ app.get("/api/v1", (req: Request, res: Response) => {
   });
 });
 
-//* Not Found Route Handler
-app.use((req: Request, res: Response) => {
-  return res.status(404).json({
-    success: false,
-    message: "404 Route not found",
-    route: req.url,
-    path: req.path,
-    url: req.originalUrl,
-  });
-});
-
 //* Start the server
 app.listen(port, () => {
   console.log(`Server is Running on port ${port}`);
