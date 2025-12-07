@@ -12,11 +12,11 @@ const addVehicle = async (payload: Record<string, unknown>) => {
     const result = await pool.query(
       `
         INSERT INTO vehicles (
-            vehicle_name,
-            type,
-            registration_number,
-            daily_rent_price,
-            availability_status
+          vehicle_name,
+          type,
+          registration_number,
+          daily_rent_price,
+          availability_status
         )
         VALUES ($1, $2, $3, $4, $5)
         RETURNING *
@@ -43,6 +43,28 @@ const addVehicle = async (payload: Record<string, unknown>) => {
   }
 };
 
+const getVehicles = async () => {
+  try {
+    const result = await pool.query(
+      `
+        SELECT * FROM vehicles
+      `
+    );
+
+    return {
+      success: true,
+      message: "Vehicles retrieved successfully",
+      data: result.rows || [],
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
 export const vehicleServices = {
   addVehicle,
+  getVehicles,
 };

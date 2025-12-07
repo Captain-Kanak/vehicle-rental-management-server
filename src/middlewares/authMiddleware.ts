@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import envConfig from "../config";
 
 const authMiddleware = (...roles: string[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const authHeader = req.headers.authorization;
 

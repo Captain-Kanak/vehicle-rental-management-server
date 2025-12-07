@@ -6,4 +6,6 @@ const router = Router();
 
 router.post("/", authMiddleware("admin"), vehicleControllers.addVehicle);
 
+router.get("/", vehicleControllers.getVehicles);
+
 export const vehicleRoutes = router;
