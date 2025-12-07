@@ -40,10 +40,10 @@ const updateUser = async (
   try {
     const dbResult = await pool.query(
       `
-        SELECT id, name, email, phone, role
+        SELECT email
         FROM users
         WHERE id = $1
-    `,
+      `,
       [userId]
     );
 
@@ -55,6 +55,8 @@ const updateUser = async (
     }
 
     const dbUser = dbResult.rows[0];
+
+    console.log({ dbUser });
 
     const isValidUser =
       user && (user.role === "admin" || user.email === dbUser.email);
@@ -93,7 +95,38 @@ const updateUser = async (
   }
 };
 
+const deleteUser = async (userId: number) => {
+  try {
+    const result = await pool.query(
+      `
+        DELETE FROM users
+        WHERE id = $1
+        RETURNING id
+      `,
+      [userId]
+    );
+
+    if (result.rows.length === 0) {
+      return {
+        success: false,
+        message: "User not found",
+      };
+    }
+
+    return {
+      success: true,
+      message: "User deleted successfully",
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
 export const userServices = {
   getUsers,
   updateUser,
+  deleteUser,
 };
