@@ -16,4 +16,10 @@ router.put(
   vehicleControllers.updateVehicleById
 );
 
+router.delete(
+  "/:vehicleId",
+  authMiddleware("admin"),
+  vehicleControllers.deleteVehicleById
+);
+
 export const vehicleRoutes = router;

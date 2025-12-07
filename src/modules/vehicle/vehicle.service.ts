@@ -160,9 +160,41 @@ const updateVehicleById = async (
   }
 };
 
+const deleteVehicleById = async (id: number) => {
+  console.log(id);
+  try {
+    const result = await pool.query(
+      `
+        DELETE FROM vehicles
+        WHERE id = $1
+        RETURNING *
+      `,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return {
+        success: false,
+        message: "Vehicle not found",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Vehicle deleted successfully",
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
 export const vehicleServices = {
   addVehicle,
   getVehicles,
   getVehicleById,
   updateVehicleById,
+  deleteVehicleById,
 };
