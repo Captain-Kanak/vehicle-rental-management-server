@@ -16,4 +16,10 @@ router.get(
   bookingControllers.getBookings
 );
 
+router.put(
+  "/:bookingId",
+  authMiddleware("admin", "customer"),
+  bookingControllers.updateBooking
+);
+
 export { router as bookingRoutes };

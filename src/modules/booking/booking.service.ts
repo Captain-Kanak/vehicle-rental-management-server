@@ -1,6 +1,6 @@
 import { JwtPayload } from "jsonwebtoken";
 import { pool } from "../../config/db";
-import getRentDays from "../../helpers/getRentDays";
+import getRentDays from "../../utilities/getRentDays";
 
 const createBooking = async (payload: Record<string, unknown>) => {
   const { customer_id, vehicle_id, rent_start_date, rent_end_date } = payload;
@@ -192,7 +192,134 @@ const getBookings = async (decodedUser: JwtPayload) => {
   }
 };
 
+const updateBooking = async (
+  bookingId: number,
+  payload: Record<string, unknown>,
+  user: JwtPayload
+) => {
+  const { role, id: customer_id } = user;
+  const { status } = payload;
+
+  try {
+    const result = await pool.query(
+      `
+        SELECT *
+        FROM bookings
+        WHERE id = $1
+      `,
+      [bookingId]
+    );
+
+    if (result.rows.length === 0) {
+      return {
+        success: false,
+        message: "Booking not found",
+      };
+    }
+
+    const booking = result.rows[0];
+
+    if (role === "customer" && status === "cancelled") {
+      if (booking.customer_id !== customer_id) {
+        return {
+          success: false,
+          message: "You are not authorized to cancel this booking",
+        };
+      }
+
+      const startDate = new Date(booking.rent_start_date);
+
+      if (startDate <= new Date()) {
+        return {
+          success: false,
+          message: "Cannot cancel booking that has already started",
+        };
+      }
+
+      const cancelResult = await pool.query(
+        `
+          UPDATE bookings
+          SET status = $2
+          WHERE id = $1
+          RETURNING *
+        `,
+        [bookingId, status]
+      );
+
+      await pool.query(
+        `
+            UPDATE vehicles
+            SET availability_status = 'available'
+            WHERE id = $1
+            `,
+        [booking.vehicle_id]
+      );
+
+      return {
+        success: true,
+        message: "Booking cancelled successfully",
+        data: cancelResult.rows[0],
+      };
+    }
+
+    if (role === "admin" && (status === "returned" || status === "cancelled")) {
+      const startDate = new Date(booking.rent_start_date);
+
+      if (startDate <= new Date()) {
+        return {
+          success: false,
+          message: "Cannot cancel booking that has already started",
+        };
+      }
+
+      const updateResult = await pool.query(
+        `
+          UPDATE bookings
+          SET status = $2
+          WHERE id = $1
+          RETURNING *
+        `,
+        [bookingId, status]
+      );
+
+      await pool.query(
+        `
+          UPDATE vehicles
+          SET availability_status = 'available'
+          WHERE id = $1
+        `,
+        [booking.vehicle_id]
+      );
+
+      if (status === "cancelled") {
+        return {
+          success: true,
+          message: "Booking marked as cancelled. Vehicle is now available",
+          data: updateResult.rows[0],
+        };
+      }
+
+      return {
+        success: true,
+        message: "Booking marked as returned. Vehicle is now available",
+        data: updateResult.rows[0],
+      };
+    }
+
+    return {
+      success: false,
+      message: "Unauthorized or invalid status change",
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
 export const bookingServices = {
   createBooking,
   getBookings,
+  updateBooking,
 };

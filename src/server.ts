@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import envConfig from "./config";
 import app from "./app";
+import autoReturnExpiredBookings from "./utilities/autoReturnExpiredBookings";
 
 const port = envConfig.port || 5000;
 
@@ -18,6 +19,11 @@ app.get("/api/v1", (req: Request, res: Response) => {
     message: "Welcome to Vehicle Rental System API v1",
   });
 });
+
+//* Auto return expired bookings every hour
+setInterval(() => {
+  autoReturnExpiredBookings();
+}, 60 * 60 * 1000);
 
 //* Start the server
 app.listen(port, () => {
