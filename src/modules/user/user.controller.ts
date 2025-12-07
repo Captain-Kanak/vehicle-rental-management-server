@@ -24,11 +24,15 @@ const getUsers = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const user: JwtPayload | undefined = req.user;
+  const user = req.user;
   const payload = req.body;
 
   try {
-    const result = await userServices.updateUser(Number(userId), user, payload);
+    const result = await userServices.updateUser(
+      Number(userId),
+      user as JwtPayload,
+      payload
+    );
 
     if (!result.success) {
       return res.status(400).json(result);

@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import { pool } from "../../config/db";
 import getRentDays from "../../helpers/getRentDays";
 
@@ -90,6 +91,63 @@ const createBooking = async (payload: Record<string, unknown>) => {
   }
 };
 
+const getBookings = async (decodedUser: JwtPayload) => {
+  const { id: customer_id, role } = decodedUser;
+  try {
+    if (role === "admin") {
+      const result = await pool.query(
+        `
+            SELECT *
+            FROM bookings
+        `
+      );
+
+      if (result.rows.length === 0) {
+        return {
+          success: true,
+          message: "No bookings found",
+          data: [],
+        };
+      }
+
+      return {
+        success: true,
+        message: "Bookings retrieved successfully",
+        data: result.rows,
+      };
+    }
+
+    const result = await pool.query(
+      `
+        SELECT *
+        FROM bookings
+        WHERE customer_id = $1
+      `,
+      [customer_id]
+    );
+
+    if (result.rows.length === 0) {
+      return {
+        success: true,
+        message: "No bookings found",
+        data: [],
+      };
+    }
+
+    return {
+      success: true,
+      message: "Bookings retrieved successfully",
+      data: result.rows,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
 export const bookingServices = {
   createBooking,
+  getBookings,
 };

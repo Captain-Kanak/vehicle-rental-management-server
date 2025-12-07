@@ -10,4 +10,10 @@ router.post(
   bookingControllers.createBooking
 );
 
+router.get(
+  "/",
+  authMiddleware("admin", "customer"),
+  bookingControllers.getBookings
+);
+
 export { router as bookingRoutes };

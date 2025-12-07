@@ -32,7 +32,7 @@ const getUsers = async () => {
 
 const updateUser = async (
   userId: number,
-  user: JwtPayload | undefined,
+  user: JwtPayload,
   payload: Record<string, unknown>
 ) => {
   const { name, email, phone, role } = payload;

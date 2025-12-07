@@ -82,7 +82,7 @@ const handleSignin = async (email: string, password: string) => {
     }
 
     const token = jwt.sign(
-      { name: user.name, email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role },
       envConfig.jwtSecret as string,
       {
         expiresIn: "1d",
