@@ -7,4 +7,4 @@ router.post("/signup", authControllers.handleSignup);
 
 router.post("/signin", authControllers.handleSignin);
 
-export const authRoutes = router;
+export { router as authRoutes };

@@ -22,4 +22,4 @@ router.delete(
   vehicleControllers.deleteVehicleById
 );
 
-export const vehicleRoutes = router;
+export { router as vehicleRoutes };
