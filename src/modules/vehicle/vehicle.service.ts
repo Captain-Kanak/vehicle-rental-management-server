@@ -161,7 +161,6 @@ const updateVehicleById = async (
 };
 
 const deleteVehicleById = async (id: number) => {
-  console.log(id);
   try {
     const result = await pool.query(
       `
