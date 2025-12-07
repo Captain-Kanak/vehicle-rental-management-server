@@ -97,8 +97,8 @@ const getBookings = async (decodedUser: JwtPayload) => {
     if (role === "admin") {
       const result = await pool.query(
         `
-            SELECT *
-            FROM bookings
+          SELECT *
+          FROM bookings
         `
       );
 
@@ -110,16 +110,44 @@ const getBookings = async (decodedUser: JwtPayload) => {
         };
       }
 
+      const bookings = result.rows;
+
+      for (let booking of bookings) {
+        const customer_id = booking.customer_id;
+        const vehicle_id = booking.vehicle_id;
+
+        const customerResult = await pool.query(
+          `
+            SELECT name, email
+            FROM users
+            WHERE id = $1
+          `,
+          [customer_id]
+        );
+
+        const vehicleResult = await pool.query(
+          `
+            SELECT vehicle_name, registration_number
+            FROM vehicles
+            WHERE id = $1
+          `,
+          [vehicle_id]
+        );
+
+        booking.customer = customerResult.rows[0];
+        booking.vehicle = vehicleResult.rows[0];
+      }
+
       return {
         success: true,
         message: "Bookings retrieved successfully",
-        data: result.rows,
+        data: bookings,
       };
     }
 
     const result = await pool.query(
       `
-        SELECT *
+        SELECT id, vehicle_id, rent_start_date, rent_end_date, total_price, status
         FROM bookings
         WHERE customer_id = $1
       `,
@@ -134,10 +162,27 @@ const getBookings = async (decodedUser: JwtPayload) => {
       };
     }
 
+    const bookings = result.rows;
+
+    for (let booking of bookings) {
+      const vehicle_id = booking.vehicle_id;
+
+      const vehicleResult = await pool.query(
+        `
+          SELECT vehicle_name, registration_number, type
+          FROM vehicles
+          WHERE id = $1
+        `,
+        [vehicle_id]
+      );
+
+      booking.vehicle = vehicleResult.rows[0];
+    }
+
     return {
       success: true,
       message: "Bookings retrieved successfully",
-      data: result.rows,
+      data: bookings,
     };
   } catch (error: any) {
     return {
