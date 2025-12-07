@@ -105,8 +105,64 @@ const getVehicleById = async (id: number) => {
   }
 };
 
+const updateVehicleById = async (
+  id: number,
+  payload: Record<string, unknown>
+) => {
+  const {
+    vehicle_name,
+    type,
+    registration_number,
+    daily_rent_price,
+    availability_status,
+  } = payload;
+
+  try {
+    const result = await pool.query(
+      `
+        UPDATE vehicles
+        SET
+          vehicle_name = $2,
+          type = $3,
+          registration_number = $4,
+          daily_rent_price = $5,
+          availability_status = $6
+        WHERE id = $1
+        RETURNING *
+      `,
+      [
+        id,
+        vehicle_name,
+        type,
+        registration_number,
+        daily_rent_price,
+        availability_status,
+      ]
+    );
+
+    if (result.rows.length === 0) {
+      return {
+        success: false,
+        message: "Vehicle not found",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Vehicle updated successfully",
+      data: result.rows[0],
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
 export const vehicleServices = {
   addVehicle,
   getVehicles,
   getVehicleById,
+  updateVehicleById,
 };
