@@ -17,6 +17,8 @@ const createBooking = async (payload: Record<string, unknown>) => {
       [vehicle_id]
     );
 
+    console.log({ vehicleResult });
+
     if (vehicleResult.rows.length === 0) {
       return {
         success: false,
@@ -26,6 +28,8 @@ const createBooking = async (payload: Record<string, unknown>) => {
 
     const vehicle = vehicleResult.rows[0];
 
+    console.log({ vehicle });
+
     if (vehicle.availability_status !== "available") {
       return {
         success: false,
@@ -33,16 +37,21 @@ const createBooking = async (payload: Record<string, unknown>) => {
       };
     }
 
-    console.log({ vehicle });
-
     const rentDays = getRentDays(
       rent_start_date as string,
       rent_end_date as string
     );
 
-    console.log(rentDays);
+    console.log({ rentDays });
 
-    if (typeof rentDays !== "number") {
+    // if (typeof rentDays !== "number") {
+    //   return {
+    //     success: false,
+    //     message: "Invalid rent days",
+    //   };
+    // }
+
+    if (rentDays === null) {
       return {
         success: false,
         message: "Invalid rent days",
