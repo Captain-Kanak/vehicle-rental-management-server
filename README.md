@@ -139,18 +139,11 @@ All endpoints follow the exact structure defined in `API_REFERENCE.md`.
 
 ## Installation
 
-git clone <repository-url>
+git clone "repository-url"
 cd vehicle-rental-system
 npm install
 
 ---
-
-## Environment Variables
-
-Create a `.env` file:
-
-DATABASE_URL=postgres://user:password@localhost:5432/vehicle_rental
-JWT_SECRET=your_jwt_secret_here
 
 ---
 
