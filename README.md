@@ -151,7 +151,7 @@ All endpoints follow the exact structure defined in `API_REFERENCE.md`.
 
 ### Development Mode
 
-npm run dev
+- $ npm run dev
 
 ---
 
