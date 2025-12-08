@@ -21,8 +21,8 @@ app.get("/api/v1", (req: Request, res: Response) => {
 });
 
 //* Auto return expired bookings every hour
-setInterval(() => {
-  autoReturnExpiredBookings();
+setInterval(async () => {
+  await autoReturnExpiredBookings();
 }, 60 * 60 * 1000);
 
 //* Start the server
