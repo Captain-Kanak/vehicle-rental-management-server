@@ -22,15 +22,4 @@ app.use("/api/v1/vehicles", vehicleRoutes);
 
 app.use("/api/v1/bookings", bookingRoutes);
 
-//* Not Found Route Handler
-app.use((req: Request, res: Response) => {
-  return res.status(404).json({
-    success: false,
-    message: "404 Route not found",
-    route: req.url,
-    path: req.path,
-    url: req.originalUrl,
-  });
-});
-
 export default app;

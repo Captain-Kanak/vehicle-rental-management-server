@@ -138,3 +138,35 @@ All endpoints follow the exact structure defined in `API_REFERENCE.md`.
 ---
 
 ## Installation
+
+git clone <repository-url>
+cd vehicle-rental-system
+npm install
+
+---
+
+## Environment Variables
+
+Create a `.env` file:
+
+DATABASE_URL=postgres://user:password@localhost:5432/vehicle_rental
+JWT_SECRET=your_jwt_secret_here
+
+---
+
+## Running the App
+
+### Development Mode
+
+npm run dev
+
+### Production Build
+
+npm run build
+npm start
+
+---
+
+## License
+
+This project is intended for educational and demonstration purposes.

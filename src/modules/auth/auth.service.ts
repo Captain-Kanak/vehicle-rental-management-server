@@ -7,6 +7,20 @@ const handleSignup = async (payload: Record<string, unknown>) => {
   const { name, email, password, phone, role } = payload;
 
   try {
+    if (!name || !email || !password || !phone || !role) {
+      return {
+        success: false,
+        message: "All fields are required",
+      };
+    }
+
+    if (password && (password as string).length < 6) {
+      return {
+        success: false,
+        message: "Password must be at least 6 characters long",
+      };
+    }
+
     const existingUser = await pool.query(
       `
         SELECT *
