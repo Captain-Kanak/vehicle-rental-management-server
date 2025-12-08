@@ -7,6 +7,8 @@ const port = envConfig.port || 5000;
 
 //* Default Routes
 app.get("/", (req: Request, res: Response) => {
+  const date = new Date();
+  console.log(`Server accessed at ${date.toISOString()}`);
   return res.status(200).json({
     success: true,
     message: "Vehicle Rental System Server is Running Successfully!",

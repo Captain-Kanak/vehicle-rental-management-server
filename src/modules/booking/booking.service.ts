@@ -5,6 +5,8 @@ import getRentDays from "../../utilities/getRentDays";
 const createBooking = async (payload: Record<string, unknown>) => {
   const { customer_id, vehicle_id, rent_start_date, rent_end_date } = payload;
 
+  console.log({ payload });
+
   try {
     const vehicleResult = await pool.query(
       `
@@ -31,10 +33,14 @@ const createBooking = async (payload: Record<string, unknown>) => {
       };
     }
 
+    console.log({ vehicle });
+
     const rentDays = getRentDays(
       rent_start_date as string,
       rent_end_date as string
     );
+
+    console.log(rentDays);
 
     if (typeof rentDays !== "number") {
       return {
@@ -44,6 +50,8 @@ const createBooking = async (payload: Record<string, unknown>) => {
     }
 
     const total_price = rentDays * vehicle.daily_rent_price;
+
+    console.log({ rentDays, total_price });
 
     const insertResult = await pool.query(
       `
@@ -62,6 +70,8 @@ const createBooking = async (payload: Record<string, unknown>) => {
 
     const newBooking = insertResult.rows[0];
 
+    console.log({ newBooking });
+
     if (newBooking) {
       await pool.query(
         `
@@ -77,6 +87,8 @@ const createBooking = async (payload: Record<string, unknown>) => {
       vehicle_name: vehicle.vehicle_name,
       daily_rent_price: vehicle.daily_rent_price,
     };
+
+    console.log({ newBooking });
 
     return {
       success: true,

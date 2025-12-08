@@ -1,4 +1,5 @@
 const getRentDays = (startDate: string, endDate: string): unknown => {
+  // "2025-12-08T09:32:22.429Z" - this is the expected format
   const start = new Date(startDate);
   const end = new Date(endDate);
 
