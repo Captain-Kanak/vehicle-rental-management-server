@@ -160,11 +160,6 @@ JWT_SECRET=your_jwt_secret_here
 
 npm run dev
 
-### Production Build
-
-npm run build
-npm start
-
 ---
 
 ## License
