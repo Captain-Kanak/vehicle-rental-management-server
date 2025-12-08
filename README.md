@@ -139,8 +139,8 @@ All endpoints follow the exact structure defined in `API_REFERENCE.md`.
 
 ## Installation
 
-git clone "repository-url"
-cd vehicle-rental-system
+- git clone "repository-url"
+- cd vehicle-rental-system
 npm install
 
 ---
