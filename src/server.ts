@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import envConfig from "./config";
 import app from "./app";
-import autoReturnExpiredBookings from "./utilities/autoReturnExpiredBookings";
+// import autoReturnExpiredBookings from "./utilities/autoReturnExpiredBookings";
 
 const port = envConfig.port || 5000;
 
@@ -39,6 +39,6 @@ app.use((req: Request, res: Response) => {
 // }, 60 * 60 * 1000);
 
 //* Start the server
-// app.listen(port, () => {
-//   console.log(`Server is Running on port ${port}`);
-// });
+app.listen(port, () => {
+  console.log(`Server is Running on port ${port}`);
+});
