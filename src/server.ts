@@ -34,9 +34,9 @@ app.use((req: Request, res: Response) => {
 });
 
 //* Auto return expired bookings every hour
-setInterval(async () => {
-  await autoReturnExpiredBookings();
-}, 60 * 60 * 1000);
+// setInterval(async () => {
+//   await autoReturnExpiredBookings();
+// }, 60 * 60 * 1000);
 
 //* Start the server
 app.listen(port, () => {
